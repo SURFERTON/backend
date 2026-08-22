@@ -1,4 +1,4 @@
-from sqlalchemy import *
+from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
@@ -42,3 +42,12 @@ class engineconn:
     def connection(self):
         conn = self.engine.connect()
         return conn
+
+engine = engineconn()
+
+def get_db():
+    session = engine.sessionmaker()  # DB 연결 생성
+    try:
+        yield session                # 라우터 함수에 전달
+    finally:
+        session.close()              # 요청 종료 후 연결 종료
